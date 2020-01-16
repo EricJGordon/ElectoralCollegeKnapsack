@@ -11,8 +11,16 @@ class ElectionResultsScraper
   output = @parsed_page.css(".wikitable")[14].css("tbody").css("tr").css("td").children.map {|child| child.text}
 
   # print @parsed_page
-  puts output[0]
-  puts output[26]
-  puts output[52]
-  print "test"
+  55.times do |i|           # 55 from 50 states, plus 2 Maine congressional districts, and 3 Nebraska ones
+    puts output[26*i]
+    puts output[26*i + 2]
+    puts output[26*i + 4]
+    puts output[26*i + 5]
+    puts output[26*i + 7]
+    puts "_______________"
+    puts
+  end
+  # TODO: handle different number of citations per row, currently throwing off pattern of every 26th element
+
+  # print "test"
 end
