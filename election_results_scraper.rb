@@ -6,11 +6,15 @@ class ElectionResultsScraper
 
   @url = "https://en.wikipedia.org/wiki/2016_United_States_presidential_election"
   @url2 = "https://en.wikipedia.org/wiki/2012_United_States_presidential_election"
+  @url3 = "https://en.wikipedia.org/wiki/2000_United_States_presidential_election"
   # @other = "https://en.wikipedia.org/w/index.php?title=Template:State_results_of_the_2016_U.S._presidential_election"
-  @parsed_page = Nokogiri::HTML(open(@url2))
+  @parsed_page = Nokogiri::HTML(open(@url3))
 
   #  output = @parsed_page.css(".wikitable")[14].css("tbody").css("tr").css("td").children.map(&:text)     # 2016
-    output = @parsed_page.css(".wikitable")[6].css("tbody").css("tr").css("td").children.map(&:text)        # 2012
+  #  output = @parsed_page.css(".wikitable")[6].css("tbody").css("tr").css("td").children.map(&:text)        # 2012
+  # output = @parsed_page.css(".wikitable")[7].css("tbody").css("tr").css("td").children.map(&:text)        # 2008
+  # output = @parsed_page.css(".wikitable")[5].css("tbody").css("tr").css("td").children.map(&:text)        # 2004
+  output = @parsed_page.css(".wikitable")[5].css("tbody").css("tr").css("td").children.map(&:text)        # 2000
 
   print(output, "\n\n")
   # print @parsed_page
@@ -22,7 +26,7 @@ class ElectionResultsScraper
       break if output[j].nil?
     end
     puts output[j]
-    until output[j + 1][0] =~ /[0-9]/  # For handling a variable number of elements between state name and vote numbers
+    until output[j + 1] =~ /,/         # For handling a variable number of elements between state name and vote numbers
       j += 1                           # due to additional details provided for states that split their electoral votes
     end                                # by congressional district, specifically Maine and Nebraska
     puts output[j + 1]
