@@ -20,7 +20,7 @@ class ElectionResultsScraper
   # print @parsed_page
 
   CSV.open("2016results.csv", "wb") do |csv|
-    csv << ["D_votes", "R_votes", "EVs"]
+    csv << ["state", "D_votes", "R_votes", "EVs"]
     j = 0
     56.times do |i|     # 56 from 50 states, plus Washington DC, plus 2 Maine congressional districts, and 3 Nebraska ones
       row = []
