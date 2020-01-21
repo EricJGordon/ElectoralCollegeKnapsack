@@ -4,10 +4,14 @@ table = CSV.parse(File.read("2016results.csv"), converters: :numeric, headers: t
 puts("\nDem total votes: #{table.by_col["D_votes"].sum}")
 puts("Rep total votes: #{table.by_col["R_votes"].sum}")
 
+states = Array.new
+
 dem_EVs, rep_EVs = 0, 0
 table.each do |row|
   dem_EVs += row["EVs"] if row["D_votes"] > row["R_votes"]
   rep_EVs += row["EVs"] if row["R_votes"] > row["D_votes"]
+
+  states << {name: row["state"], weight: row["EVs"], value: (row["D_votes"]+row["R_votes"]) / 2 + 1}
 end
 
 puts("\nDem electoral votes: #{dem_EVs}")
@@ -44,8 +48,16 @@ item5 = { :name => "joe", :value => 7, :weight => 5 }
 item6 = { :name => "tim", :value => 3, :weight => 1 }
 items = Array.new
 items << item1 << item2 << item3 << item4 << item5 << item6
-@solved = Array.new(items.size + 1) {Array.new(10)}
+@solved = Array.new(states.size + 1) {Array.new(269)}
 
-print("Answer: #{knapsack(items, 10)}")
+ans = knapsack(states, 268)
+puts("Answer: ", ans)
+puts("EVs:  #{ans.reduce(0) {|sum, x| sum + x[:weight]}}")
+puts("votes needed to scrape a plurality in each of those states:  #{ans.reduce(0) {|sum, x| sum + x[:value]}}")
+puts("Comparable number of votes in the states that made up the remaining 270 EVs: #{states.reduce(0) {|sum, x| sum + x[:value]} - ans.reduce(0) {|sum, x| sum + x[:value]}}")
+puts("Most efficient states to win EC: ",  states.to_a - ans.to_a)
 
+#print items
+# puts
+#puts states
 
