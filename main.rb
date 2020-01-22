@@ -3,6 +3,7 @@ require 'csv'
 table = CSV.parse(File.read("2016results.csv"), converters: :numeric, headers: true)
 puts("\nDem total votes: #{table.by_col["D_votes"].sum}")
 puts("Rep total votes: #{table.by_col["R_votes"].sum}")
+puts "(currently double counting Maine and Nebraska)"
 
 states = Array.new
 
@@ -23,11 +24,11 @@ def knapsack(items, c)
   if @solved[items.size][c].nil? && items.size > 0 && c!=0
     #puts items.size
     if items[-1][:weight] > c
-      chosen = knapsack(items[0..-2], c)
+      chosen = knapsack(items[0...-1], c)
     else
       #puts("hi #{items[0..-2]}")
-      tmp1 = knapsack(items[0..-2], c)
-      tmp2 = knapsack(items[0..-2], c - items[-1][:weight])
+      tmp1 = knapsack(items[0...-1], c)
+      tmp2 = knapsack(items[0...-1], c - items[-1][:weight])
       tmp2 << items[-1]
       #puts("tmp1:   #{tmp1}")
       #puts("tmp2:   #{tmp2}")
@@ -50,14 +51,49 @@ items = Array.new
 items << item1 << item2 << item3 << item4 << item5 << item6
 @solved = Array.new(states.size + 1) {Array.new(269)}
 
-ans = knapsack(states, 268)
+puts states
+ans = knapsack(states.shuffle, 268)
 puts("Answer: ", ans)
 puts("EVs:  #{ans.reduce(0) {|sum, x| sum + x[:weight]}}")
 puts("votes needed to scrape a plurality in each of those states:  #{ans.reduce(0) {|sum, x| sum + x[:value]}}")
 puts("Comparable number of votes in the states that made up the remaining 270 EVs: #{states.reduce(0) {|sum, x| sum + x[:value]} - ans.reduce(0) {|sum, x| sum + x[:value]}}")
 puts("Most efficient states to win EC: ",  states.to_a - ans.to_a)
 
-#print items
-# puts
-#puts states
+@arr = Array.new(states.size + 1) {Array.new(269)}
+@w = Array.new
+@v = Array.new
+def KS(n, c)
+  if !@arr[n][c].nil?
+    return @arr[n][c]
+  end
+  if n == 0 || c == 0
+    result = 0
+  elsif @w[n] > c
+    result = KS(n-1, c)
+  else
+    tmp1 = KS(n-1, c)
+    tmp2 = @v[n] + KS(n-1, c-@w[n])
+    #puts("tmp2:   #{tmp2}")
+    result = [tmp1, tmp2].max
+  end
+  @arr[n][c] = result
+  result
+end
+
+@w[0], @v[0] = 0, 0
+
+states = states.shuffle
+states.each do |item|
+  @w << item[:weight]
+  @v << item[:value]
+end
+
+puts(knapsack(items, 10))
+puts "------"
+puts(KS(states.size, 268))
+
+@arr.each do |row|
+  print row*', '
+  puts
+end
 
