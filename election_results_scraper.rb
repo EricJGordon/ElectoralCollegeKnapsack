@@ -6,7 +6,7 @@ class ElectionResultsScraper
 
   @url = "https://en.wikipedia.org/wiki/2016_United_States_presidential_election"
   @url2 = "https://en.wikipedia.org/wiki/2012_United_States_presidential_election"
-  @url3 = "https://en.wikipedia.org/wiki/2000_United_States_presidential_election"
+  @url3 = "https://en.wikipedia.org/wiki/1988_United_States_presidential_election"
   # @other = "https://en.wikipedia.org/w/index.php?title=Template:State_results_of_the_2016_U.S._presidential_election"
   @parsed_page = Nokogiri::HTML(open(@url3))
 
@@ -14,12 +14,16 @@ class ElectionResultsScraper
   # output = @parsed_page.css(".wikitable")[6].css("tbody").css("tr").css("td").children.map(&:text)        # 2012
   # output = @parsed_page.css(".wikitable")[7].css("tbody").css("tr").css("td").children.map(&:text)        # 2008
   # output = @parsed_page.css(".wikitable")[5].css("tbody").css("tr").css("td").children.map(&:text)        # 2004
-   output = @parsed_page.css(".wikitable")[5].css("tbody").css("tr").css("td").children.map(&:text)        # 2000
+  # output = @parsed_page.css(".wikitable")[5].css("tbody").css("tr").css("td").children.map(&:text)        # 2000
+  # output = @parsed_page.css(".wikitable")[6].css("tbody").css("tr").css("td").children.map(&:text)        # 1996
+  # output = @parsed_page.css(".wikitable")[7].css("tbody").css("tr").css("td").children.map(&:text)        # 1992
+   output = @parsed_page.css(".wikitable")[7].css("tbody").css("tr").css("td").children.map(&:text)        # 1988
+
 
   print(output, "\n\n")
   # print @parsed_page
 
-  CSV.open("2000results.csv", "wb") do |csv|
+  CSV.open("1988results.csv", "wb") do |csv|
     csv << %w(state R_votes D_votes EVs)
     j = 0
     56.times do       # 56 from 50 states, plus Washington DC, plus 2 Maine congressional districts, and 3 Nebraska ones
