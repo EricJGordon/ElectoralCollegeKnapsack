@@ -35,7 +35,7 @@ class ElectionResultsScraper
       row << output[j + 4].delete(',').chomp  # automatically determine by checking header?
       row << (output[j + 3].chomp!='–' ? output[j + 3].chomp : output[j + 6].chomp)
       csv << row    # TODO: stop using hyphen for check, too many variations that look the same but are treated different
-      j += 22
+      j += 22  # 22 works for all years, with the sole exception (currently) of 1988 which 17 can be used for instead
       # puts "_______________\n"
       break if output[j].nil?
     end
