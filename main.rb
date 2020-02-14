@@ -96,4 +96,3 @@ puts(KS(states.size, 268))
   print row*', '
   puts
 end
-

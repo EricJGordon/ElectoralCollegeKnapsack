@@ -9,15 +9,9 @@ class ElectionResultsScraper
   @url3 = "https://en.wikipedia.org/wiki/1988_United_States_presidential_election"
   # @other = "https://en.wikipedia.org/w/index.php?title=Template:State_results_of_the_2016_U.S._presidential_election"
   @parsed_page = Nokogiri::HTML(open(@url3))
+  table_numbers = { 2016 => 14, 2012 => 6, 2008 => 7, 2004 => 5, 2000 => 5, 1996 => 6, 1992 => 7, 1988 => 7}
 
-  # output = @parsed_page.css(".wikitable")[14].css("tbody").css("tr").css("td").children.map(&:text)       # 2016
-  # output = @parsed_page.css(".wikitable")[6].css("tbody").css("tr").css("td").children.map(&:text)        # 2012
-  # output = @parsed_page.css(".wikitable")[7].css("tbody").css("tr").css("td").children.map(&:text)        # 2008
-  # output = @parsed_page.css(".wikitable")[5].css("tbody").css("tr").css("td").children.map(&:text)        # 2004
-  # output = @parsed_page.css(".wikitable")[5].css("tbody").css("tr").css("td").children.map(&:text)        # 2000
-  # output = @parsed_page.css(".wikitable")[6].css("tbody").css("tr").css("td").children.map(&:text)        # 1996
-  # output = @parsed_page.css(".wikitable")[7].css("tbody").css("tr").css("td").children.map(&:text)        # 1992
-   output = @parsed_page.css(".wikitable")[7].css("tbody").css("tr").css("td").children.map(&:text)        # 1988
+   output = @parsed_page.css(".wikitable")[table_numbers[1988]].css("tbody").css("tr").css("td").children.map(&:text)
 
 
   print(output, "\n\n")
