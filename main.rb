@@ -1,8 +1,11 @@
 require 'csv'
 
-table = CSV.parse(File.read("2016results.csv"), converters: :numeric, headers: true)
-puts("\nDem total votes: #{table.by_col["D_votes"].sum}")
-puts("Rep total votes: #{table.by_col["R_votes"].sum}")
+table = CSV.parse(File.read("1972results.csv"), converters: :numeric, headers: true)
+dem_votes = table.by_col["D_votes"].sum
+rep_votes = table.by_col["R_votes"].sum
+two_party_votes = dem_votes + rep_votes
+puts("\nDem total votes: #{dem_votes}")
+puts("Rep total votes: #{rep_votes}")
 puts "(currently double counting Maine and Nebraska)"
 
 states = Array.new
@@ -50,6 +53,6 @@ puts("EVs:  #{ans.reduce(0) {|sum, x| sum + x[:weight]}}")
 puts("Votes needed to scrape a plurality in each of those states:  #{ans.reduce(0) {|sum, x| sum + x[:value]}}")
 min_votes = states.reduce(0) {|sum, x| sum + x[:value]} - ans.reduce(0) {|sum, x| sum + x[:value]}
 puts("Comparable number of votes in the states that made up the remaining 270 EVs: #{min_votes}")
-puts("As a percentage of the total vote, that would be #{(min_votes.to_f/(table.by_col["D_votes"].sum + table.by_col["R_votes"].sum)*100).round(2)}% ")
+puts("As a percentage of the total (two-party) vote share, that would be #{(min_votes.to_f/(two_party_votes)*100).round(2)}% ")
 puts("\nMost efficient states to win EC: ",  (states.to_a - ans.to_a).map { |s| "#{s[:value]} votes in #{s[:name]}" })
 

@@ -26,9 +26,10 @@ This would also be useful for elections like 2008 or 1996 where the electoral co
 Currently included are data sets for each presidential election going back to 1972. It stops there because before that you would often get third party candidates (like segregationist Dixiecrats) also winning some states.  
 That wouldn't be compatible with the assumption this program works under, which is that the top two parties in the Electoral College are also the top two parties in each individual state.
 
-Additional planned features will be:  
+Additional features will be:  
 \- Looking at the overall turnout figures for each state independently of their partisanship to conclude which states are the most efficient in terms of getting an EV win with the minimum number of votes, again, independent of their actual partisanship.  
 Relates to the state's size, turnout rates/voter enthusiasm, and how close the state was to qualifying for an additional congressional seat.  
+Done: Minimum two-party vote share needed to win each election usually fluctuated in the 21-22% range, with 1972's 20.08% the closest it got to dropping below 20%  
 \- Showing possible ties under the electoral college, where two candidates each get 269 Electoral Votes, and how few additional votes it would take to satisfy the most 'realistic' of those possible scenarios.
 
 <a name="footnote1"></a>
