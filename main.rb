@@ -1,6 +1,6 @@
 require 'csv'
 
-table = CSV.parse(File.read("1972results.csv"), converters: :numeric, headers: true)
+table = CSV.parse(File.read("2016results.csv"), converters: :numeric, headers: true)
 dem_votes = table.by_col["D_votes"].sum
 rep_votes = table.by_col["R_votes"].sum
 two_party_votes = dem_votes + rep_votes
@@ -56,3 +56,9 @@ puts("Comparable number of votes in the states that made up the remaining 270 EV
 puts("As a percentage of the total (two-party) vote share, that would be #{(min_votes.to_f/(two_party_votes)*100).round(2)}% ")
 puts("\nMost efficient states to win EC: ",  (states.to_a - ans.to_a).map { |s| "#{s[:value]} votes in #{s[:name]}" })
 
+winner = (dem_EVs > rep_EVs)? "D_votes" : "R_votes"
+loser = (dem_EVs < rep_EVs)? "D_votes" : "R_votes"
+
+puts
+lost_states = table.select {|state| (state[loser] < state[winner]) }
+lost_states.each {|s| print s}
