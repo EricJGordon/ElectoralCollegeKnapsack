@@ -56,9 +56,16 @@ puts("Comparable number of votes in the states that made up the remaining 270 EV
 puts("As a percentage of the total (two-party) vote share, that would be #{(min_votes.to_f/(two_party_votes)*100).round(2)}% ")
 puts("\nMost efficient states to win EC: ",  (states.to_a - ans.to_a).map { |s| "#{s[:value]} votes in #{s[:name]}" })
 
-winner = (dem_EVs > rep_EVs)? "D_votes" : "R_votes"
-loser = (dem_EVs < rep_EVs)? "D_votes" : "R_votes"
+winner_votes = (dem_EVs > rep_EVs)? "D_votes" : "R_votes"
+loser_votes = (dem_EVs < rep_EVs)? "D_votes" : "R_votes"
 
 puts
-lost_states = table.select {|state| (state[loser] < state[winner]) }
-lost_states.each {|s| print s}
+ lost_states = Array.new
+
+table.each do |row|
+  if row[loser_votes] < row[winner_votes]
+    lost_states << {name: row["state"], weight: row["EVs"], value: row[winner_votes] - row[loser_votes] + 1}
+  end
+end
+
+lost_states.sort_by { |state| state[:value]}.each {|s| puts s}
