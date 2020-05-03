@@ -1,6 +1,7 @@
 require 'csv'
 
-table = CSV.parse(File.read("2016results.csv"), converters: :numeric, headers: true)
+year = "2016"
+table = CSV.parse(File.read("#{year}results.csv"), converters: :numeric, headers: true)
 dem_votes = table.by_col["D_votes"].sum
 rep_votes = table.by_col["R_votes"].sum
 two_party_votes = dem_votes + rep_votes
@@ -20,7 +21,7 @@ end
 
 puts("\nDem electoral votes: #{dem_EVs}")
 puts("Rep electoral votes: #{rep_EVs}")
-puts("Winner is the #{(dem_EVs>rep_EVs)?"Democrat":"Republican"}")
+puts("The #{(dem_EVs>rep_EVs)?"Democrat":"Republican"} wins")
 
 def knapsack(items, weight)
   chosen = Array.new
@@ -47,20 +48,24 @@ end
 @solved = Array.new(states.size + 1) {Array.new(269)}
 
 #puts states
-ans = knapsack(states.shuffle, 268)
+ans = knapsack(states, 268)
 puts("\nOutput: ", ans)
-puts("EVs:  #{ans.reduce(0) {|sum, x| sum + x[:weight]}}")
-puts("Votes needed to scrape a plurality in each of those states:  #{ans.reduce(0) {|sum, x| sum + x[:value]}}")
+max_EVs_while_losing = ans.reduce(0) {|sum, x| sum + x[:weight]}
+puts("\nElectoral Votes gained by winning the above states:  #{max_EVs_while_losing}")
+puts("Votes needed to scrape a plurality in all of the those states:  #{ans.reduce(0) {|sum, x| sum + x[:value]}}")
 min_votes = states.reduce(0) {|sum, x| sum + x[:value]} - ans.reduce(0) {|sum, x| sum + x[:value]}
-puts("Comparable number of votes in the states that made up the remaining 270 EVs: #{min_votes}")
-puts("As a percentage of the total (two-party) vote share, that would be #{(min_votes.to_f/(two_party_votes)*100).round(2)}% ")
-puts("\nMost efficient states to win EC: ",  (states.to_a - ans.to_a).map { |s| "#{s[:value]} votes in #{s[:name]}" })
+puts("Comparable number of votes in the states that make up the remaining #{538 - max_EVs_while_losing} Electoral Votes: #{min_votes}")
+min_percent = (min_votes.to_f/(two_party_votes)*100).round(2)
+puts("As a percentage of the total (two-party) vote share, that would be #{min_percent}% ")
+puts("i.e. using #{year} turnout figures, you'd only need #{min_percent}% of the total number of votes in order to win the Electoral College")
+puts("(assuming that those votes were as strategically/fortuitously distributed as possible)")
+puts("\nThe states and votes that comprise that most efficient Electoral College win: ",  (states.to_a - ans.to_a).map { |s| "#{s[:value]} votes in #{s[:name]}" })
 
 winner_votes = (dem_EVs > rep_EVs)? "D_votes" : "R_votes"
 loser_votes = (dem_EVs < rep_EVs)? "D_votes" : "R_votes"
 
 puts
- lost_states = Array.new
+lost_states = Array.new
 
 table.each do |row|
   if row[loser_votes] < row[winner_votes]
