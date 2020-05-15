@@ -74,3 +74,14 @@ table.each do |row|
 end
 
 lost_states.sort_by { |state| state[:value]}.each {|s| puts s}
+
+def complementary_knapsack(items, weight)
+  # find the least value of items that can exceed a given weight
+  # achieved by finding the most value of items without exceeding (total weight - original weight), and then choose everything else
+  # i.e. solving the corresponding knapsack problem, and then taking the inverse of the resulting set
+  items - knapsack(items, items.reduce(0) {|sum, x| sum + x[:weight]} - weight )
+end
+
+puts "\n#{270 - [rep_EVs, dem_EVs].min} EVs needed"
+flips = complementary_knapsack(lost_states, 270 - [rep_EVs, dem_EVs].min).each {|s| puts s}
+puts "#{flips.reduce(0) {|sum, x| sum + x[:weight]}} EVs,  #{flips.reduce(0) {|sum, x| sum + x[:value]}} votes"
