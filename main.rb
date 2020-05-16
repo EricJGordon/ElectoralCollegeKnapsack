@@ -1,13 +1,14 @@
 require 'csv'
 
-year = "2016"
+puts "Enter a presidential election year since 1972: "
+year = gets.chomp
 table = CSV.parse(File.read("#{year}results.csv"), converters: :numeric, headers: true)
 dem_votes = table.by_col["D_votes"].sum
 rep_votes = table.by_col["R_votes"].sum
 two_party_votes = dem_votes + rep_votes
 puts("\nDem total votes: #{dem_votes}")
 puts("Rep total votes: #{rep_votes}")
-puts "(currently double counting Maine and Nebraska)"
+puts "(Maine and Nebraska currently not counted consistently from year to year)"
 
 states = Array.new
 
@@ -73,6 +74,7 @@ table.each do |row|
   end
 end
 
+puts "Lost states (lost by overall EC loser) in order of closeness: "
 lost_states.sort_by { |state| state[:value]}.each {|s| puts s}
 
 def complementary_knapsack(items, weight)
@@ -83,5 +85,6 @@ def complementary_knapsack(items, weight)
 end
 
 puts "\n#{270 - [rep_EVs, dem_EVs].min} EVs needed"
-flips = complementary_knapsack(lost_states, 270 - [rep_EVs, dem_EVs].min).each {|s| puts s}
+flips = complementary_knapsack(lost_states, 270 - [rep_EVs, dem_EVs].min)
+puts flips.map { |f| "#{f[:value]} more votes to win #{f[:name]} (#{f[:weight]} EVs)"}
 puts "#{flips.reduce(0) {|sum, x| sum + x[:weight]}} EVs,  #{flips.reduce(0) {|sum, x| sum + x[:value]}} votes"
