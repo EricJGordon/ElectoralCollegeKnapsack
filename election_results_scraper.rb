@@ -7,7 +7,7 @@ class ElectionResultsScraper
   puts "Enter a presidential election year since 1972: "
   year = gets.chomp
   @url = "https://en.wikipedia.org/wiki/" + year + "_United_States_presidential_election"
-  @parsed_page = Nokogiri::HTML(open(@url))
+  @parsed_page = Nokogiri::HTML(URI.open(@url))
   table_numbers = { "2016" => 14, "2012" => 6, "2008" => 7, "2004" => 5, "2000" => 5, "1996" => 6,
                     "1992" => 7, "1988" => 7, "1984" => 7, "1980" => 7, "1976" => 5, "1972" => 4}
 
